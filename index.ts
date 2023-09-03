@@ -1,14 +1,14 @@
 
 export interface SignalListener extends Callback {}
 
-export default class Signal<ClientArgs extends readonly unknown[] = unknown[]> {
+export default class Signal<Args extends readonly unknown[] = unknown[]> {
     private _callbacks = new Set<SignalListener>;
 
     /**
      * Connects to the Signal
      * @returns Function
      */
-    public Connect(handler: (...args: ClientArgs) => unknown): SignalListener {
+    public Connect(handler: (...args: Args) => unknown): SignalListener {
         this._callbacks.add(handler);
         return handler;
     }
@@ -16,7 +16,7 @@ export default class Signal<ClientArgs extends readonly unknown[] = unknown[]> {
     /**
      * Fires the Signal with the given arguments. Must be in the same type as generic.
      */
-    public Fire(...args: ClientArgs) {
+    public Fire(...args: Args) {
         this._callbacks.forEach(callback => task.spawn(callback, ...args));
     }
 
@@ -24,7 +24,7 @@ export default class Signal<ClientArgs extends readonly unknown[] = unknown[]> {
      * Connects a listener and immediately disconnects it after connecting once.
      * @returns Function
      */
-    public Once(handler: (...args: ClientArgs) => unknown): SignalListener {
+    public Once(handler: (...args: Args) => unknown): SignalListener {
         const f = this.Connect((...args) => {
             this.Unbind(f);
             handler(...args);
@@ -45,7 +45,7 @@ export default class Signal<ClientArgs extends readonly unknown[] = unknown[]> {
      * Yield the current thread until signal gets fired.
      * @returns Signal Parameters
      */
-    public Wait() : ClientArgs {
+    public Wait() : Args {
         const running = coroutine.running();
         
         this.Once((...args) => {
@@ -53,7 +53,7 @@ export default class Signal<ClientArgs extends readonly unknown[] = unknown[]> {
         });
         
 
-        return coroutine.yield() as unknown as ClientArgs
+        return coroutine.yield() as unknown as Args
     }
 
     /**
