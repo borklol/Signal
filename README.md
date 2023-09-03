@@ -11,13 +11,13 @@ To create a new signal, simply import the `Signal` class and instantiate it. You
 ```typescript
 import Signal from "./Signal";
 
-const mySignal = new Signal<[string, number]>();
+const mySignal = new Signal<[message: string, value: number]>();
 ```
 
 ## Connecting to a Signal
 You can connect functions or handlers to the signal using the `Connect` method. These functions will be called whenever the signal is fired.
 ```typescript
-const myHandler = (message: string, value: number) => {
+const myHandler = (message, value) => {
     print(`Received message: ${message}, Value: ${value}`);
 };
 
@@ -66,10 +66,10 @@ Here's a complete example demonstrating the usage of the `Signal` class:
 import Signal from "./Signal";
 
 // Create a new signal that accepts a string and a number
-const mySignal = new Signal<[string, number]>();
+const mySignal = new Signal<[message: string, value: number]>();
 
 // Connect a handler to the signal
-const myHandler = (message: string, value: number) => {
+const myHandler = (message, value) => {
     print(`Received message: ${message}, Value: ${value}`);
 };
 
